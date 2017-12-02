@@ -13,8 +13,9 @@ public class Airport
     
     private final int MAX_FLIGHTS = 200;
     
-    public Airport (){
+    public Airport (Flight f){
         
+		_flightsSchedule = new Flight f[];
         _noOfFlights = 0;
     }
 }
