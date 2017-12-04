@@ -17,7 +17,7 @@ public class Flight
     private Time1 _departure;
     private int _flightDuration;
     private int _noOfPassengers;
-    private boolean _isFull;
+    public boolean _isFull;
     private int _price;
 
     // all the finals
@@ -89,9 +89,9 @@ public class Flight
     public String toString()
     {
         if(getIsFull()) // check if filght is full or not
-            return ("Flight form " + getOrigin() + " to " + getDestination() + " departs at " + getDeparture() + ". Flight is full.");
+            return ("Flight from " + getOrigin() + " to " + getDestination() + " departs at " + getDeparture() + ". Flight is full.");
         else
-            return ("Flight form " + getOrigin() + " to " + getDestination() + " departs at " + getDeparture() + ". Flight is not full.");
+            return ("Flight from " + getOrigin() + " to " + getDestination() + " departs at " + getDeparture() + ". Flight is not full.");
     }
 
     /**
@@ -103,7 +103,7 @@ public class Flight
     public Time1 getArrivalTime()
     { 
         // get time arrival in minutes 
-        int arrivalInMinutes = _flightDuration + _departure.minFromMidnight();
+        int arrivalInMinutes = getFlightDuration() + getDeparture().minFromMidnight();
         
         // convert the minutes to Time (h,m)
         int h = (arrivalInMinutes / MINUTES_IN_HOUR) % HOURS_IN_DAY;
@@ -124,7 +124,7 @@ public class Flight
 
     public Time1 getDeparture()
     {
-        return new Time1 (_departure); // aliasing, return must be a new copy!
+        return _departure = new Time1 (_departure); // aliasing, return must be a new copy!
     }
 
     /**
@@ -156,7 +156,7 @@ public class Flight
      */
     public void setOrigin (String origin)
     {
-        _origin = origin;
+        _origin = new String (origin);
     }
 
     /**
@@ -178,7 +178,7 @@ public class Flight
 
     public void setDestination (String dest)
     {
-        _destination = dest;
+        _destination = new String (dest);
     }
 
     /**
@@ -264,7 +264,7 @@ public class Flight
 
     public boolean getIsFull()
     {
-        if (_noOfPassengers >= MAX_CAPACITY)
+        if (getNoOfPassengers() >= MAX_CAPACITY)
         {
             return _isFull = true;
         }
@@ -284,7 +284,7 @@ public class Flight
 
     public boolean addPassengers(int num)
     {
-        if(_noOfPassengers + num <= MAX_CAPACITY && num > PASSENGERS_LOW_BOUND)
+        if(getNoOfPassengers() + num <= MAX_CAPACITY && num > PASSENGERS_LOW_BOUND)
         {
             _noOfPassengers += num;
             getIsFull(); // update for _isFull
@@ -317,8 +317,8 @@ public class Flight
 
     public boolean landsEarlier(Flight other)
     {
-        int landsThis = this._departure.minFromMidnight() + this._flightDuration;
-        int landsOther = other._departure.minFromMidnight() + other._flightDuration;
+        int landsThis = this.getDeparture().minFromMidnight() + this.getFlightDuration();
+        int landsOther = other.getDeparture().minFromMidnight() + other.getFlightDuration();
         return (landsThis < landsOther);
     } 
 
@@ -331,7 +331,7 @@ public class Flight
 
     public boolean isCheaper(Flight other)
     {
-        return (this._price < other._price);
+        return (this.getPrice() < other.getPrice());
     }
 
     /**
@@ -342,6 +342,6 @@ public class Flight
 
     public int totalPrice()
     {
-        return _price * _noOfPassengers;
+        return getPrice() * getNoOfPassengers();
     }
 } // End of class Flight

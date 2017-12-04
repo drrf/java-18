@@ -23,45 +23,32 @@ public class Airport
     }
 
     public String toString(){
-        int index;
-        String headline = "The flights for airport " + _airport + " are:";
-        System.out.println (headline);
-        for (index = 0; index <= _noOfFlights; index ++){
-            if(_flightsSchedule[index] != null)
-                System.out.println(_flightsSchedule[index].toString());
+        String str = "The flights for airport " + _airport + "today are:\n";
+        // System.out.println (headline);
+        for (int i = 0; i <= _noOfFlights; i++){
+            if(_flightsSchedule[i] != null){
+                str += _flightsSchedule[i].toString() + "\n";
+            }
         }
-        return ("");
-    }
-
-    private boolean noOfFlight (){
-        return _noOfFlights < MAX_FLIGHTS;
-    }
-
-    private boolean checkDestOrigin (){
-        int index;
-        if(_flightsSchedule[_noOfFlights - 1].getDestination().equals(_airport) ||
-        _flightsSchedule[_noOfFlights - 1].getOrigin().equals(_airport))
-            return true;
-        else
-            return false;
+        return (str);
     }
 
     public boolean addFlight (Flight f){
         if (_noOfFlights == MAX_FLIGHTS) return false; // check if array full
         
-        _flightsSchedule [_noOfFlights++] = new Flight (f); // add flight and count++
-        if (checkDestOrigin()){
-            for (int index = _noOfFlights; index < _noOfFlights; index++){
-                _flightsSchedule [index] = new Flight (f);
-            }
+        if(f == null) return false;
+        
+        if (f.getOrigin().equals(this._airport) || f.getDestination().equals(this._airport)){ // check if is from this airport
+            _flightsSchedule [_noOfFlights++] = new Flight (f); // add flight and count++
             return true;
         } else {
-            _noOfFlights--;
             return false;
-        }
-    } // End of if
+        }// End of if
+    } 
 
     public boolean removeFlight(Flight f){
+        if(f == null) return false;
+        
         int i;
         for (i = 0; i < _noOfFlights; i++){
             if(_flightsSchedule[i].equals(f)){ // found the flight to be removed
@@ -81,16 +68,16 @@ public class Airport
         boolean flag = true;
         int first = 0;
         Flight highest = _flightsSchedule[0];
-        for (int index = 0; index < _noOfFlights; index++){
-            if (!place.equals(_flightsSchedule[index].getOrigin()) && (!place.equals(_flightsSchedule[index].getDestination()))){
+        for (int i = 0; i < _noOfFlights; i++){
+            if (!place.equals(_flightsSchedule[i].getOrigin())){
                 flag = false;
             } else {
                 flag = true;
                 first++;
                 if(first == 1)
-                    highest = _flightsSchedule[index];
-                if(first != 1 && _flightsSchedule[index].getDeparture().before(highest.getDeparture()))
-                    highest = _flightsSchedule[index];
+                    highest = _flightsSchedule[i];
+                if(first != 1 && _flightsSchedule[i].getDeparture().before(highest.getDeparture()))
+                    highest = _flightsSchedule[i];
             }
         }
         if(flag = false)
@@ -101,31 +88,35 @@ public class Airport
 
     public int howManyFullFlights(){
         int fullFlightsNum = 0;
-        for (int index = 0; index < _noOfFlights; index++){
-            if(_flightsSchedule[index].getIsFull())
+        for (int i = 0; i < _noOfFlights; i++){
+            if(_flightsSchedule[i].getIsFull())
                 fullFlightsNum++;
         }
         return fullFlightsNum;
     }
 
     public int howManyFlightsBetween (String city1, String city2){
+        if(city1 == null || city2 == null) return (-1); // if null err return -1
         int sum = 0;
-        for (int index = 0; index < _noOfFlights; index++){
-            if (city1.equals(_flightsSchedule[index].getOrigin()) &&
-            (city2.equals(_flightsSchedule[index].getDestination())) ||
-            (city2.equals(_flightsSchedule[index].getOrigin()) &&
-                (city1.equals(_flightsSchedule[index].getDestination()))))
+        String strOrigin, strDest;
+        for (int i = 0; i < _noOfFlights; i++){
+            strOrigin = _flightsSchedule[i].getOrigin();
+            strDest = _flightsSchedule[i].getDestination();
+            if (city1.equals(strOrigin) && (city2.equals(strDest)) ||
+            (city2.equals(strOrigin) && (city1.equals(strDest))))
                 sum++;
         }
+        // System.out.println("The city1 " + city1 + ", the city2 " + city2);
         return sum;
     }
 
     public String mostPopularDestination(){
+        if(_noOfFlights == 0) return null;
         int key, most = 1;
         String temp;
         String mostPopular = _flightsSchedule[0].getDestination();
-        for (int index = 0; index < _noOfFlights; index++){
-            temp = _flightsSchedule[index].getDestination();
+        for (int i = 0; i < _noOfFlights; i++){
+            temp = _flightsSchedule[i].getDestination();
             key = 1;
             for (int k = 1; k < _noOfFlights; k++){
                 if (temp.equals(_flightsSchedule[k].getDestination())){
@@ -134,37 +125,42 @@ public class Airport
             }
             if (key > most){
                 most = key;
-                mostPopular = _flightsSchedule[index].getDestination();
+                mostPopular = _flightsSchedule[i].getDestination();
             }
         }
+        // System.out.println("The most Popular num: " + most);
         return mostPopular;
     }
 
     public Flight mostExpensiveTicket(){
+        if(_noOfFlights == 0) return null;
         int temp;
         int key = _flightsSchedule[0].getPrice();
         Flight mostExpensive = _flightsSchedule[0];
-        for (int index = 1; index < _noOfFlights; index++){
-            temp = _flightsSchedule[index].getPrice();
+        for (int i = 0; i < _noOfFlights; i++){
+            temp = _flightsSchedule[i].getPrice();
             if (temp > key){
-                mostExpensive = _flightsSchedule[index];
-                key = _flightsSchedule[index].getPrice();
+                mostExpensive = _flightsSchedule[i];
+                key = _flightsSchedule[i].getPrice();
             }
         }
+        // System.out.println("The most Expensive: " + key);
         return new Flight (mostExpensive); // avoid aliasing
     }
 
     public Flight longestFlight () {
+        if(_noOfFlights == 0) return null;
         int temp;
         int key = _flightsSchedule[0].getFlightDuration();
         Flight longestFlight = _flightsSchedule[0];
-        for (int index = 0; index < _noOfFlights; index++){
-            temp = _flightsSchedule[index].getFlightDuration();
+        for (int i = 0; i < _noOfFlights; i++){
+            temp = _flightsSchedule[i].getFlightDuration();
             if (temp > key){
-                longestFlight = _flightsSchedule[index];
-                key = _flightsSchedule[index].getFlightDuration();
+                longestFlight = _flightsSchedule[i];
+                key = _flightsSchedule[i].getFlightDuration();
             }
         }
+        // System.out.println("The longest Flight: " + key);
         return new Flight (longestFlight); // avoid aliasing
     }
 }
