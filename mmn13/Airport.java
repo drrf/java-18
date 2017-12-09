@@ -1,6 +1,6 @@
 
 /**
- * Represents a Airport.
+ * This class represents a Airport.
  * A Airport object is represented by Flight array,
  * The city of Airport, and the number of flights.
  *
@@ -21,9 +21,9 @@ public class Airport
 
     /**
      * Constructor for a Airport object.
-     * If the city == null, _airport be the DEFAULT_NAME, else _airport be "city".
-     * The maximum numbers of Flight array is get from the final MAX_FLIGHTS.
-     * Initializing the counter of flights.
+     * If the city == null, _airport set the DEFAULT_NAME, else _airport set "city".
+     * The maximum numbers of Flight array is set from the final MAX_FLIGHTS.
+     * Initializing _noOfFlights as a counter of flights in this airport, starting from 0.
      * 
      * @param city The city of Airport location.
      */
@@ -35,11 +35,11 @@ public class Airport
             _airport = city;
         }
         _flightsSchedule = new Flight [MAX_FLIGHTS];
-        _noOfFlights = 0; // Represents the flights counter, starting from 0
+        _noOfFlights = 0; // Represents the flights counter
     }
 
     /**
-     * Return a string representation of the airport flights
+     * Return a String representation of the airport flights
      * (for example: "The flights for airport Tel-Aviv today are:
      * Flight from London to Paris departs at 09:24. Flight is full.").
      * 
@@ -51,7 +51,7 @@ public class Airport
         String str = "The flights for airport " + _airport + " today are:\n";
         for (int i = 0; i <= _noOfFlights; i++){ // for loop from 0 to <= noOfFlights, to print all the flights in the array
             if(_flightsSchedule[i] != null){
-                str += _flightsSchedule[i].toString() + "\n"; // toString from class Flight
+                str += _flightsSchedule[i].toString()+ "\n"; // toString from Flight class 
             }
         } // End of for
         return (str);
@@ -60,16 +60,18 @@ public class Airport
     /**
      * Add flight to airport Flight array.
      * If the number of Flight exceeds the maximum capacity, no flight are added, and false returned.
-     * If the flight (f) == null, no flight are added, and false returned.
+     * If the flight (f) == null, or Origin == null or Destination == null, no flight are added, and false returned.
      * If the flight Origin or Destination equals to airport location,
      * add flight and count++, else return false.
+     * 
+     * @param f The Flight object to adding to Airport flight schedule.
      * 
      * @return True if the flight add to Flight array.
      */
 
     public boolean addFlight (Flight f){
         if (_noOfFlights == MAX_FLIGHTS) return false; // check if array full
-        if(f == null) return false;
+        if(f == null || f.getOrigin() == null || f.getDestination() == null) return false;  // check if enter null
 
         if (f.getOrigin().equals(this._airport) || f.getDestination().equals(this._airport)){ // check if this flight is from this airport
             _flightsSchedule [_noOfFlights++] = new Flight (f); // add flight and count++
@@ -86,11 +88,13 @@ public class Airport
      * another For loop to move the rest of the flights 1 step back (override), 
      * remove the last flight from Flight array, and counter minus by 1.
      * 
+     * @param f The Flight object to remove from Airport flight schedule.
+     * 
      * @return True if the flight remove from Flight array.
      */
 
     public boolean removeFlight(Flight f){
-        if(f == null) return false;
+        if(f == null) return false;   // check if enter null
 
         for (int i = 0; i < _noOfFlights; i++){  // for loop from 0 to < noOfFlights, to found the flight to be removed
             if(_flightsSchedule[i].equals(f)){ // found the flight to be removed
@@ -112,12 +116,14 @@ public class Airport
      * for loop from 0 to < noOfFlights, to found the place flight,
      * if don't found return null, else found the first flight from destination.
      * 
+     * @param place The place to search the first flight from destination.
+     * 
      * @return A copy of departure time of the first flight from destination (place).
      */
 
     public Time1 firstFlightFromDestination (String place){
         if (_noOfFlights == 0) return null;
-        if(place == null) return null;
+        if(place == null) return null; // check if enter null
         boolean flag = true;
         int first = 0;
         Flight highest = _flightsSchedule[0]; // initializing flight instant to be return
@@ -149,7 +155,7 @@ public class Airport
      */
 
     public int howManyFullFlights(){
-        if (_noOfFlights == 0) return -1; // if no flights, err return -1
+        if (_noOfFlights == 0) return (-1); // if no flights, err return -1
         int fullFlightsNum = 0; // counter full flight
         for (int i = 0; i < _noOfFlights; i++){ // for loop from 0 to < noOfFlights, to found how many full flights
             if(_flightsSchedule[i].getIsFull())
@@ -172,7 +178,7 @@ public class Airport
      */
 
     public int howManyFlightsBetween (String city1, String city2){
-        if (_noOfFlights == 0) return -1; // if no flights, return err -1
+        if (_noOfFlights == 0) return (-1); // if no flights, return err -1
         if(city1 == null || city2 == null) return (-2); // if city are null, return err -2
         int sum = 0; // counter how many
         String strOrigin, strDest;
@@ -190,11 +196,9 @@ public class Airport
     /**
      * Calculate the most popular destination.
      * If the counter of flights is 0, return null.
-     * if city1 or city2 are null, return err -2
      * External for loop from 0 to < noOfFlights, to found the first most popular destination,
      * Internal for loop to equals the most popular destination by itself to found how many flights, and counter plus by 1.
      * If found another one that bigger from temp most, make a swap between them.
-     * 
      * 
      * @return String of the most popular Destination.
      */
