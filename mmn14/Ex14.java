@@ -25,15 +25,14 @@ public class Ex14
      */
 
     public static int count (int[] a, int x){
-        // binary search with counter return the number of x in the array
-        int counter = binarySearch(a, x);
-        return counter;
+        // binary search method, return the number of x in the array
+        return binarySearch(a, x);
     } // end of count
 
     /**
      * Check how many switch need to create alternating String of 0 and 1;
      * 
-     * Time complexity: O(n/2) = O(n);
+     * Time complexity: n/2 = O(n);
      * Space complexity: O(1);
      * 
      * @param s String of 0 and 1 to check alternating.
@@ -47,16 +46,14 @@ public class Ex14
 
         for (int i = 0; i <= s.length() -1; i +=2 ){
             n++;
-            if (s.charAt(i) != '0'){ // check how many zero need to switch
+            if (s.charAt(i) != '0'){ // check how many zero need to switch to be 010101 ect
                 counterZero++;
-            } else { // check how many one need to switch
+            } else { // check how many one need to switch to be 101010 ect
                 counterOne++;
             }
         }
 
-        // System.out.print(printStr()); // print out complexity
-
-        if (counterZero <= counterOne)
+        if (counterZero <= counterOne) // if zero less or equal return zero
             return counterZero;
         else return counterOne;
     } // end of alternating
@@ -70,47 +67,41 @@ public class Ex14
      */
 
     public static boolean isWay (int[] a) {
-        // first check
+        // if the number at index 0 equal to array length return true
         if (a[0] == a.length-1)
             return true;
 
-        // check if index 0 biger of array length or negative num and return false
+        // if the number at index 0 biger of array length or negative num return false
         if (a[0] > a.length-1 || a[0] <= 0)
             return false;
 
-        /* array b for exit isWayRecursion:
-        if (b [0] = 1 return true; b [1] = 1 return false;) */
+        /* array b for exit moveRight with answer:
+        after method finish is change the array
+        (b [0] = 1, return true;) */
         int [] b = new int [1];
         
-        n = 0;
-
         // start to check
         boolean answer = moveRight(a, b, 0, 0, 0);
-        // boolean answer = isWay(a, 0, 0);
-        System.out.println(n + " attempts, before out from recursion!");
         
-        
-        if (b[0] == 1) // exit recursion
+        if (b[0] == 1) // if array b 
         return true; 
         else
         return false;
         
-        // return answer;
+        /* 
+        another method to check way that take more time complexity (worst case: O(n!)) but don't damage array cells
+        boolean answer = isWay(a, 0, 0);
+        return answer;
+        */
         
     } // end of isWay
     
-    // this method take more time complexity from moveRight method but don't erase the array
+    // this method take more time complexity from moveRight method but don't damage array cells
     private static boolean isWay (int[] a, int i, int loop) {
-        // counter of time complexity
-        n++;
-        
-        // counter loop of recursion
-        loop++;
+        loop++; // counter loop of recursion
         
         // limted recursion to never stack on loop more then the length of the array
         if (loop > a.length){ 
-            // System.out.println(loop + " trys, out of recursion limit!");
-            // System.out.println(n + " trys, out of recursion limit!");
             return false;
         }
 
@@ -123,18 +114,18 @@ public class Ex14
     }
 
     /**
-     * Check way from index 0,0 to move to one top.
+     * Check way from index 0,0 to move to one hill.
      * 
-     * @param mat Array two dimensional with numbers to check the way to one top. 
+     * @param mat Array two dimensional with numbers to check the way to one hill. 
      */
 
     public static void printPath (int[][] mat) {
-        System.out.print("(0,0)"); // first print the current top, anyway
-        path (mat, 0, 0, 0);
+        System.out.print("(0,0)"); // print the current hill
+        path (mat, 0, 0);
     } // end of printPath
 
+    // help method for count(): Check how many times "x" found in array of sort number with ascending order.
     private static int binarySearch (int [] array, int num){
-        int counter = 0;
         int middle;
         int lower = 0;
         int upper = array.length -1;
@@ -158,8 +149,8 @@ public class Ex14
         if (num == array[lower] && num != array[lower+1]){ // check lower only return 1
             return 1;
         }
-        if (num == array[lower] && num == array[upper]){ // check array with one num
-            System.out.println("all the array number is the same num!");
+        if (num == array[lower] && num == array[upper]){ // check array with same numbers
+            System.out.println("all the array numbers is the same number!");
             return array.length;
         }
 
@@ -203,16 +194,13 @@ public class Ex14
             return 1;
         }
 
-        int sum = upperCheck-lowerCheck; // calc the sum of how many num show up in the array
-        return sum;
+        return upperCheck-lowerCheck; // calc the sum of how many num show up in the array
     } // end of binarySearch
 
+    // help method for isWay(): Check if there way from index 0 to the last cell in the array.
     private static boolean moveRight (int [] a, int [] b, int indCell, int indTemp, int loop) {
-        // counter of time complexity
-        n++;
-        
-        // counter loop of recursion
-        loop++;
+        n++; // counter of time complexity
+        loop++; // counter loop of recursion
 
         // limted recursion to never stack on loop more then the length of the array
         if (loop > a.length){ 
@@ -250,14 +238,15 @@ public class Ex14
             return false;
         }
     } // end of moveRight
-
+    
+    // help method for isWay(): Check if there way from index 0 to the last cell in the array.
     private static boolean tryLeft (int [] a, int [] b, int indCell, int indTemp, int loop) {
         if (a[indCell] <= indCell && (indCell - a[indCell] > 0)){
             indTemp = indCell;
             indCell = indCell - a[indCell];
             a[indTemp] = 0;  // del temp cell to never step back
 
-            moveRight(a, b, indCell,indTemp, loop);
+            moveRight(a, b, indCell,indTemp, loop); // continuation move right
             return false;
         } else {
             loop--;
@@ -265,7 +254,8 @@ public class Ex14
             return false;
         }
     } // end of tryLeft
-
+    
+    // help method for isWay(): Check if there way from index 0 to the last cell in the array.
     private static boolean StepBack (int [] a, int [] b, int indCell, int indTemp, int loop) {
         if (indTemp == 0) // if try to step back to index 0 return false
             return false;
@@ -277,29 +267,21 @@ public class Ex14
                 return false;
 
         a[indTemp] = 0; // del temp cell to never step back
-        moveRight(a, b, indCell,indTemp, loop);
+        moveRight(a, b, indCell,indTemp, loop); // continuation move right
         return false;
     } // end of StepBack
-
-    private static String path (int[][] mat, int column, int line, int loop){
-        // start count loop of recursion
-        loop++;
-
-        // limted recursion to never stack on loop more then the length of the array
-        if (loop > mat.length * mat.length){ 
-            System.out.println(loop + " trys, out of recursion limit!");
-            return ""; // important! if found recursion loop it will make it stop
-        }
-
+    
+    // help method for path(): Check way from index 0,0 to move to one hill.
+    private static void path (int[][] mat, int column, int row){
         boolean finshR = false;
         boolean finshD = false;
         boolean finshU = false;
         boolean finshL = false;
 
-        if (line+1 < mat.length){ // try dwon
-            if (mat[line][column] < mat[line+1][column]){ // dwon is bigger ?
-                line++;
-                System.out.print("(" + line + "," + column + ")"); // print
+        if (row+1 < mat.length){ // if not out from array column length try dwon
+            if (mat[row][column] < mat[row+1][column]){ // dwon is bigger ?
+                row++;
+                System.out.print("(" + row + "," + column + ")"); // print the hill
             } else {
                 finshD = true;
             } 
@@ -307,10 +289,10 @@ public class Ex14
             finshD = true;
         }
 
-        if (column+1 < mat.length){ // try right
-            if (mat[line][column] < mat[line][column+1]){ // right is bigger ?
+        if (column+1 < mat[row].length){ // if not out from array row length try right
+            if (mat[row][column] < mat[row][column+1]){ // right is bigger ?
                 column++;
-                System.out.print("(" + line + "," + column + ")"); // print
+                System.out.print("(" + row + "," + column + ")"); // print the hill
             } else {
                 finshR = true;
             }
@@ -318,10 +300,10 @@ public class Ex14
             finshR = true;
         }
 
-        if (line-1 < mat.length && line-1 >= 0){ // try up
-            if (mat[line][column] < mat[line-1][column] ){ // up is bigger ?
-                line--;
-                System.out.print("(" + line + "," + column + ")"); // print
+        if (row-1 < mat.length && row-1 >= 0){ // if not out from array column length try up
+            if (mat[row][column] < mat[row-1][column] ){ // up is bigger ?
+                row--;
+                System.out.print("(" + row + "," + column + ")"); // print the hill
             } else {
                 finshU = true;
             }
@@ -329,23 +311,19 @@ public class Ex14
             finshU = true;
         }
 
-        if (column-1 < mat.length && column-1 >= 0){ // try left
-            if (mat[line][column] < mat[line][column-1]){ // left is bigger ?
+        if (column-1 < mat.length && column-1 >= 0){ // if not out from array row length try left
+            if (mat[row][column] < mat[row][column-1]){ // left is bigger ?
                 column--;
-                System.out.print("(" + line + "," + column + ")"); // print
+                System.out.print("(" + row + "," + column + ")"); // print the hill
             } else {
                 finshL = true;
             }
         } else {
             finshL = true;
         }
-
+        
+        // if not finsh all sides check try again 
         if (finshR != true || finshD != true || finshU !=true || finshL !=true)
-            path (mat, column, line, loop);
-
-        if (finshR == true && finshD == true && finshU == true && finshL == true)
-            return "";
-        else 
-            return "";
+            path (mat, column, row);
     } // end of path
-} // end of the class
+} // End of the class
