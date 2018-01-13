@@ -45,7 +45,6 @@ public class Ex14
         int counterOne = 0;
 
         for (int i = 0; i <= s.length() -1; i +=2 ){
-            n++;
             if (s.charAt(i) != '0'){ // check how many zero need to switch to be 010101 ect
                 counterZero++;
             } else { // check how many one need to switch to be 101010 ect
@@ -83,7 +82,7 @@ public class Ex14
         // start to check
         boolean answer = moveRight(a, b, 0, 0, 0);
         
-        if (b[0] == 1) // if array b 
+        if (b[0] == 1) // check array b to return answer
         return true; 
         else
         return false;
@@ -155,7 +154,6 @@ public class Ex14
         }
 
         do { // find the num in the low border
-            n++;
             middle = (lower+upper)/2;
             if (num == array[middle])
                 upper = middle;
@@ -178,7 +176,6 @@ public class Ex14
 
         upper = array.length -1; // reset the upper
         do { // find the num in the up border
-            n++;
             middle = (lower+upper)/2;
             if (num == array[middle])
                 lower = middle+1;
@@ -199,7 +196,6 @@ public class Ex14
 
     // help method for isWay(): Check if there way from index 0 to the last cell in the array.
     private static boolean moveRight (int [] a, int [] b, int indCell, int indTemp, int loop) {
-        n++; // counter of time complexity
         loop++; // counter loop of recursion
 
         // limted recursion to never stack on loop more then the length of the array
